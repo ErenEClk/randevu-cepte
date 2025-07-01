@@ -1,0 +1,32 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "randevu-cepte-c040d",
+          "appId": "1:890269824365:android:2e36a814f0e2094c42d664",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "randevu-cepte-c040d",
+          "configurations": {
+            "android": "1:890269824365:android:2e36a814f0e2094c42d664",
+            "ios": "1:890269824365:ios:6a8015c99f354dd242d664",
+            "macos": "1:890269824365:ios:6a8015c99f354dd242d664",
+            "web": "1:890269824365:web:c59d5ddc0d012ed742d664",
+            "windows": "1:890269824365:web:ff3a944f2089e00042d664"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Test modu: Herkese okuma/yazma izni
+    // SADECE DEV/TEST ortamında kullanın!
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Salons collection
+    match /salons/{salonId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && resource.data.ownerId == request.auth.uid;
+    }
+    
+    // Appointments collection
+    match /appointments/{appointmentId} {
+      allow read, write: if request.auth != null && 
+        (resource.data.customerId == request.auth.uid || 
+         resource.data.salonOwnerId == request.auth.uid);
+      allow create: if request.auth != null;
+    }
+    
+    // Chat collection - yeni eklenen
+    match /chats/{chatId} {
+      allow read, write: if request.auth != null && 
+        (resource.data.customerId == request.auth.uid || 
+         resource.data.businessId == request.auth.uid);
+      allow create: if request.auth != null;
+      
+      // Chat messages subcollection
+      match /messages/{messageId} {
+        allow read, write: if request.auth != null && 
+          (get(/databases/$(database)/documents/chats/$(chatId)).data.customerId == request.auth.uid ||
+           get(/databases/$(database)/documents/chats/$(chatId)).data.businessId == request.auth.uid);
+        allow create: if request.auth != null;
+      }
+    }
+    
+    // Business balance collection
+    match /business_balances/{balanceId} {
+      allow read, write: if request.auth != null && resource.data.businessId == request.auth.uid;
+      allow create: if request.auth != null;
+    }
+    
+    // Photos collection - yeni eklenen
+    match /photos/{photoId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && resource.data.uploadedBy == request.auth.uid;
+      allow create: if request.auth != null;
+      allow delete: if request.auth != null && resource.data.uploadedBy == request.auth.uid;
+    }
+  }
+} 
